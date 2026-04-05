@@ -78,6 +78,12 @@ function setupSocket(io) {
       });
     });
 
+    // Chat messaging fallback (direct socket)
+    socket.on('new_message', (data) => {
+      // Broadcast to everyone else in the room
+      socket.to(data.roomId).emit('new_message', data);
+    });
+
     // ========== CALL EVENTS ==========
 
     socket.on('call_initiate', ({ roomId, callType, targetUserId }) => {
