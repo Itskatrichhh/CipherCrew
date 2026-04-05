@@ -23,7 +23,6 @@ const allowedOrigins = [
   process.env.CLIENT_URL,
   'http://localhost:5173',
   'http://localhost:3000',
-  'https://ciphercrew-phi.vercel.app',
 ].filter(Boolean);
 
 app.use(cors({
@@ -84,6 +83,9 @@ const io = new Server(server, {
 });
 
 setupSocket(io);
+
+// Make io accessible to our router
+app.set('io', io);
 
 // MongoDB connection
 const MONGODB_URI = process.env.MONGODB_URI;
