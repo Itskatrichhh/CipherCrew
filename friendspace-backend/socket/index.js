@@ -17,8 +17,15 @@ function setupSocket(io) {
         socketId: socket.id,
         lastSeen: new Date()
       });
+
+      // Auto-join all rooms this user is a part of to receive instant messages everywhere
+      const Room = require('../models/Room');
+      const userRooms = await Room.find({ 'members.user': socket.userId, isActive: true });
+      userRooms.forEach(room => {
+        socket.join(room._id.toString());
+      });
     } catch (err) {
-      console.error('Error updating user status:', err);
+      console.error('Error updating user status or joining rooms:', err);
     }
 
     // Broadcast online status
